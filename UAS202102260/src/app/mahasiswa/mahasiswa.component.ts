@@ -1,5 +1,5 @@
 import { AfterViewInit, Renderer2, Component, OnInit } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpClientModule} from '@angular/common/http';
 
 declare const $ : any;
 
