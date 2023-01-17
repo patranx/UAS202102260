@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit, Renderer2 } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { AfterViewInit, Renderer2, Component, OnInit } from '@angular/core';
+import { HttpClient} from '@angular/common/http';
 
 declare const $ : any;
 
@@ -9,12 +9,43 @@ declare const $ : any;
   styleUrls: ['./mahasiswa.component.css']
 })
 
+export class MahasiswaComponent implements OnInit, AfterViewInit {
+  data: any;
+  table1: any;
 
-export class MahasiswaComponent implements OnInit {
+  constructor(private http : HttpClient, private renderer : Renderer2) { }
+  ngAfterViewInit(): void {
 
-  constructor() { }
+
+    this.table1 = $("#table1").DataTable();
+    this.bind_mahasiswa();
+  }
 
   ngOnInit(): void {
   }
+  bind_mahasiswa():void{
+    this.http.get("https://stmikpontianak.net/011100862/tampilMahasiswa.php")
+    .subscribe((data: any) => {
+      console.log(data);
 
+      this.table1.clear();
+
+      data.forEach((element: any)=> {
+        var tempatTanggalLahir = element.TempatLahir + ", " + element.TanggalLahir;
+
+        var row = [
+          element.NIM,
+          element.Nama,
+          element.JenisKelamin,
+          tempatTanggalLahir,
+          element.JP,
+          element.Alamat,
+          element.StatusNikah,
+          element.TahunMasuk
+        ]
+        this.table1.row.add(row);
+      })
+      this.table1.draw(false);
+    })
+  }
 }
